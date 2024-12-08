@@ -28,8 +28,11 @@ class ExaminerServiceImplTest {
     @Mock
     private JavaQuestionService javaQuestionServiceMock;
 
+    @Mock
+    private MathQuestionService mathQuestionServiceMock;
+
     @Test
-    void shouldReturnCollectionOfQuestions_WhenCorrectParam() {
+    void shouldReturnCollectionOfJavaQuestions_WhenCorrectParam() {
         List<Question> questionsTest = List.of(QUESTION_OBJECT_1,
                 QUESTION_OBJECT_2,
                 QUESTION_OBJECT_3,
@@ -40,7 +43,7 @@ class ExaminerServiceImplTest {
         when(javaQuestionServiceMock.getAll()).thenReturn(questionsTest);
         when(javaQuestionServiceMock.getRandomQuestion()).thenReturn(expected);
         //test
-        Collection<Question> actual = out.getQuestions(1);
+        Collection<Question> actual = out.getJavaQuestions(1);
         //check
         System.out.println(actual);
         assertTrue(actual.contains(expected));
@@ -49,14 +52,41 @@ class ExaminerServiceImplTest {
     }
 
     @Test
-    void shouldReturnCollectionOfQuestions_WhenParamLessThanZero_ThenTrowException() {
-        //test & check
-        assertThrows(BadQuestionAmountException.class,
-                () -> out.getQuestions(-1));
+    void shouldReturnCollectionOfMathQuestions_WhenCorrectParam() {
+        List<Question> questionsTest = List.of(QUESTION_OBJECT_1,
+                QUESTION_OBJECT_2,
+                QUESTION_OBJECT_3,
+                QUESTION_OBJECT_4,
+                QUESTION_OBJECT_5);
+        Question expected = questionsTest.get(RANDOM.nextInt(questionsTest.size()));
+
+        when(mathQuestionServiceMock.getAll()).thenReturn(questionsTest);
+        when(mathQuestionServiceMock.getRandomQuestion()).thenReturn(expected);
+        //test
+        Collection<Question> actual = out.getMathQuestions(1);
+        //check
+        System.out.println(actual);
+        assertTrue(actual.contains(expected));
+        verify(mathQuestionServiceMock).getAll();
+        verify(mathQuestionServiceMock).getRandomQuestion();
     }
 
     @Test
-    void shouldReturnCollectionOfQuestions_WhenParamMoreThanCollectionSize_ThenTrowException() {
+    void shouldReturnCollectionOfJavaQuestions_WhenParamLessThanZero_ThenTrowException() {
+        //test & check
+        assertThrows(BadQuestionAmountException.class,
+                () -> out.getJavaQuestions(-1));
+    }
+
+    @Test
+    void shouldReturnCollectionOfMathQuestions_WhenParamLessThanZero_ThenTrowException() {
+        //test & check
+        assertThrows(BadQuestionAmountException.class,
+                () -> out.getMathQuestions(-1));
+    }
+
+    @Test
+    void shouldReturnCollectionOfJavaQuestions_WhenParamMoreThanCollectionSize_ThenTrowException() {
         List<Question> questionsTest = List.of(QUESTION_OBJECT_1,
                 QUESTION_OBJECT_2,
                 QUESTION_OBJECT_3,
@@ -65,7 +95,21 @@ class ExaminerServiceImplTest {
         when(javaQuestionServiceMock.getAll()).thenReturn(questionsTest);
         //test & check
         assertThrows(IllegalQuestionAmountException.class,
-                () -> out.getQuestions(questionsTest.size() + 1));
+                () -> out.getJavaQuestions(questionsTest.size() + 1));
         verify(javaQuestionServiceMock, only()).getAll();
+    }
+
+    @Test
+    void shouldReturnCollectionOfMathQuestions_WhenParamMoreThanCollectionSize_ThenTrowException() {
+        List<Question> questionsTest = List.of(QUESTION_OBJECT_1,
+                QUESTION_OBJECT_2,
+                QUESTION_OBJECT_3,
+                QUESTION_OBJECT_4,
+                QUESTION_OBJECT_5);
+        when(mathQuestionServiceMock.getAll()).thenReturn(questionsTest);
+        //test & check
+        assertThrows(IllegalQuestionAmountException.class,
+                () -> out.getMathQuestions(questionsTest.size() + 1));
+        verify(mathQuestionServiceMock, only()).getAll();
     }
 }

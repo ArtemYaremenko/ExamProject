@@ -12,23 +12,24 @@ import pro.sky.ExamProject.exception.InvalidStringException;
 import pro.sky.ExamProject.exception.JavaQuestionsSetIsEmptyException;
 import pro.sky.ExamProject.model.Question;
 import pro.sky.ExamProject.repository.impl.JavaQuestionRepository;
+import pro.sky.ExamProject.repository.impl.MathQuestionRepository;
 
-
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static pro.sky.ExamProject.constans.QuestionsAndAnswers.*;
-
+import static pro.sky.ExamProject.constans.QuestionsAndAnswers.ANSWER_4;
 @ExtendWith(MockitoExtension.class)
-class JavaQuestionServiceTest {
+class MathQuestionServiceTest {
 
     @InjectMocks
-    private JavaQuestionService out;
-
+    private MathQuestionService out;
     @Mock
-    private JavaQuestionRepository javaQuestionRepositoryMock;
+    private MathQuestionRepository mathQuestionRepositoryMock;
 
     @ParameterizedTest
     @MethodSource("validArgumentsForTest")
@@ -36,8 +37,8 @@ class JavaQuestionServiceTest {
         Question expected = new Question(question, answer);
         Collection<Question> testCollection = Set.of(expected);
 
-        when(javaQuestionRepositoryMock.add(expected)).thenReturn(expected);
-        when(javaQuestionRepositoryMock.getAll()).thenReturn(testCollection);
+        when(mathQuestionRepositoryMock.add(expected)).thenReturn(expected);
+        when(mathQuestionRepositoryMock.getAll()).thenReturn(testCollection);
 
         //test
         Question actual = out.add(question, answer);
@@ -47,8 +48,8 @@ class JavaQuestionServiceTest {
         assertEquals(expected.getAnswer(), actual.getAnswer());
         assertTrue(out.getAll().contains(expected));
 
-        verify(javaQuestionRepositoryMock).add(expected);
-        verify(javaQuestionRepositoryMock).getAll();
+        verify(mathQuestionRepositoryMock).add(expected);
+        verify(mathQuestionRepositoryMock).getAll();
     }
 
     @ParameterizedTest
@@ -66,8 +67,8 @@ class JavaQuestionServiceTest {
         Question expected = new Question(question, answer);
         Collection<Question> testCollection = new HashSet<>();
 
-        when(javaQuestionRepositoryMock.remove(expected)).thenReturn(expected);
-        when(javaQuestionRepositoryMock.getAll()).thenReturn(testCollection);
+        when(mathQuestionRepositoryMock.remove(expected)).thenReturn(expected);
+        when(mathQuestionRepositoryMock.getAll()).thenReturn(testCollection);
 
         //test
         Question actual = out.remove(question, answer);
@@ -75,8 +76,8 @@ class JavaQuestionServiceTest {
         assertEquals(expected, actual);
         assertTrue(out.getAll().isEmpty());
 
-        verify(javaQuestionRepositoryMock).remove(expected);
-        verify(javaQuestionRepositoryMock).getAll();
+        verify(mathQuestionRepositoryMock).remove(expected);
+        verify(mathQuestionRepositoryMock).getAll();
     }
 
     @ParameterizedTest
@@ -91,13 +92,13 @@ class JavaQuestionServiceTest {
     void shouldGetCollectionOfQuestions() {
         Set<Question> expected = Set.of(QUESTION_OBJECT_1, QUESTION_OBJECT_2, QUESTION_OBJECT_3, QUESTION_OBJECT_4, QUESTION_OBJECT_5);
 
-        when(javaQuestionRepositoryMock.getAll()).thenReturn(expected);
+        when(mathQuestionRepositoryMock.getAll()).thenReturn(expected);
         //test
         Collection<Question> actual = out.getAll();
         //check
         assertTrue(actual.containsAll(expected));
 
-        verify(javaQuestionRepositoryMock).getAll();
+        verify(mathQuestionRepositoryMock).getAll();
     }
 
     @Test
@@ -116,14 +117,14 @@ class JavaQuestionServiceTest {
                 QUESTION_OBJECT_4,
                 QUESTION_OBJECT_5);
 
-        when(javaQuestionRepositoryMock.getAll()).thenReturn(testCollection);
+        when(mathQuestionRepositoryMock.getAll()).thenReturn(testCollection);
 
         //test
         Question actual = out.getRandomQuestion();
         //check
         assertTrue(out.getAll().contains(actual));
 
-        verify(javaQuestionRepositoryMock, atLeastOnce()).getAll();
+        verify(mathQuestionRepositoryMock, atLeastOnce()).getAll();
     }
 
     @Test
@@ -152,5 +153,4 @@ class JavaQuestionServiceTest {
                 Arguments.of(null, ANSWER_4),
                 Arguments.of(null, null));
     }
-
 }
